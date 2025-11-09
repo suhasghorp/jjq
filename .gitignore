@@ -34,3 +34,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Documentation/Analysis Files ###
+optim.md
+perf-test-plan.md
+performance-analysis.md
+test-failure-analysis.md
+benchmark-results.md
