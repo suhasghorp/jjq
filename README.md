@@ -50,7 +50,7 @@ Manual native-image invocation (alternative):
 ```powershell
 mvn -DskipTests package
 $jar = Get-ChildItem target -Filter "*-jar-with-dependencies.jar" | Sort-Object LastWriteTime -Descending | Select -First 1
-native-image.cmd -H:Name=jjq --no-fallback --install-exit-handlers -jar $jar.FullName
+native-image.cmd -H:Name=jjq --no-fallback --install-exit-handlers -march=native -jar $jar.FullName
 ```
 
 Run the native executable:

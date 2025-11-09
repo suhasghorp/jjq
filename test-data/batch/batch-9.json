@@ -1,0 +1,30 @@
+{
+  "statusCode": 200,
+  "statusText": "Ok",
+  "data": {
+    "testId": "210910_AiDc3",
+    "summary": "https://www.webpagetest.org/result/210910_AiDc3/",
+    "url": "https://example.com/",
+    "median": {
+      "firstView": {
+        "SpeedIndex": 1234,
+        "TTFB": 321,
+        "loadTime": 2345
+      }
+    },
+    "runs": {
+      "1": {
+        "firstView": {
+          "SpeedIndex": 1300,
+          "loadTime": 2400
+        }
+      },
+      "2": {
+        "firstView": {
+          "SpeedIndex": 1250,
+          "loadTime": 2380
+        }
+      }
+    }
+  }
+}

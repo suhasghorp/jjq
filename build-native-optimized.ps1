@@ -1,12 +1,11 @@
 param(
     [string]$ImageName = "jjq",
-    [switch]$SkipTests,
-    [string[]]$NativeArgs
+    [switch]$SkipTests
 )
 
 $ErrorActionPreference = 'Stop'
 
-function Write-Info($msg) { Write-Host "[jjq-native] $msg" }
+function Write-Info($msg) { Write-Host "[jjq-native-optimized] $msg" }
 
 # Move to repo root (script directory)
 Set-Location -Path $PSScriptRoot
@@ -29,14 +28,34 @@ if (-not $jar) { throw "Could not find jar-with-dependencies in target folder. D
 
 Write-Info "Using JAR: $($jar.FullName)"
 
-# Step 3: Build native image
+# Step 3: Build native image with aggressive optimizations
 $nativeImage = "native-image.cmd"
 $outDir = Join-Path $PSScriptRoot 'target'
 if (!(Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir | Out-Null }
-$arguments = @("-H:Name=$ImageName", "-H:Path=$outDir", "--no-fallback", "--install-exit-handlers", "-march=native", "-jar", $jar.FullName)
-if ($NativeArgs) { $arguments += $NativeArgs }
 
-Write-Info "Invoking: $nativeImage $($arguments -join ' ')"
+# Aggressive optimization flags
+$arguments = @(
+    "-H:Name=$ImageName",
+    "-H:Path=$outDir",
+    "--no-fallback",
+    "-march=native",
+
+    # Optimization level 3 (maximum)
+    "-O3",
+
+    # Experimental options
+    "-H:+UnlockExperimentalVMOptions",
+
+    # Optimize for runtime performance over build time
+    "--initialize-at-build-time=com.challenges",
+
+    # The JAR
+    "-jar",
+    $jar.FullName
+)
+
+Write-Info "Invoking: $nativeImage with aggressive optimizations"
+Write-Info "Flags: -O3, aggressive inlining, G1 GC, build-time initialization"
 & $nativeImage @arguments
 if ($LASTEXITCODE -ne 0) { throw "native-image failed with exit code $LASTEXITCODE" }
 
